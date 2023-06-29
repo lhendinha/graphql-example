@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  graphql-example-app:
+    build: .
+    image: graphql-example-app
+    env_file:
+      - .env
+    environment:
+      - MONGODB_URI=mongodb://mongodb:$DB_PORT/graphql-example
+    ports:
+      - $PORT:$PORT
+    depends_on:
+      - mongodb
+    volumes:
+      - .:/src
+    networks:
+      - graphql-example-app-network
+
+  mongodb:
+    image: mongo:6-jammy
+    env_file:
+      - .env
+    ports:
+      - $DB_PORT:$DB_PORT
+    volumes:
+      - dbdata6:/data/db
+    networks:
+      - graphql-example-app-network
+
+volumes:
+  dbdata6:
+
+networks:
+  graphql-example-app-network:
+    driver: bridge
